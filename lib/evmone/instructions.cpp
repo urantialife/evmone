@@ -10,6 +10,13 @@ namespace evmone
 {
 namespace
 {
+template <void Fn(ExecutionState&) noexcept>
+const instruction* op(const instruction* instr, AdvancedExecutionState& state) noexcept
+{
+    Fn(state);
+    return ++instr;
+}
+
 template <evmc_status_code Fn(ExecutionState&) noexcept>
 const instruction* op(const instruction* instr, AdvancedExecutionState& state) noexcept
 {

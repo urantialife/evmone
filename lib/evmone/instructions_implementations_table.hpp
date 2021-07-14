@@ -9,9 +9,17 @@ namespace evmone::instr
 {
 /// Wraps the basic instruction implementation to InstrFn signature.
 template <evmc_status_code Fn(ExecutionState&) noexcept>
-inline InstrResult wrap(ExecutionState& state, size_t pc) noexcept
+[[gnu::always_inline]] inline InstrResult wrap(ExecutionState& state, size_t pc) noexcept
 {
     return {Fn(state), pc + 1};
+}
+
+/// Wraps the basic instruction implementation to InstrFn signature.
+template <void Fn(ExecutionState&) noexcept>
+[[gnu::always_inline]] inline InstrResult wrap(ExecutionState& state, size_t pc) noexcept
+{
+    Fn(state);
+    return {EVMC_SUCCESS, pc + 1};
 }
 
 /// The table of pointers to core instruction implementations.
