@@ -195,3 +195,38 @@ TEST(eof_validation, EOF2_table_section_odd_size)
     EXPECT_EQ(validate_eof(from_hex("EFCAFE02 010001 030002 030003 00 FE 0000 000000")),
         EOFValidationErrror::odd_table_section_size);
 }
+// Test cases:
+// Missing immediates
+TEST(eof_validation, EOF2_rjump_truncated)
+{
+    EXPECT_EQ(validate_eof(from_hex("EFCAFE02 010001 00 5C")),
+        EOFValidationErrror::missing_immediate_argument);
+
+    EXPECT_EQ(validate_eof(from_hex("EFCAFE02 010002 00 5C00")),
+        EOFValidationErrror::missing_immediate_argument);
+}
+
+TEST(eof_validation, EOF2_rjumpi_truncated)
+{
+    EXPECT_EQ(validate_eof(from_hex("EFCAFE02 010001 00 5D")),
+        EOFValidationErrror::missing_immediate_argument);
+
+    EXPECT_EQ(validate_eof(from_hex("EFCAFE02 010002 00 5D00")),
+        EOFValidationErrror::missing_immediate_argument);
+}
+
+TEST(eof_validation, EOF2_rjumptable_truncated)
+{
+    EXPECT_EQ(validate_eof(from_hex("EFCAFE02 010001 00 5E")),
+        EOFValidationErrror::missing_immediate_argument);
+
+    EXPECT_EQ(validate_eof(from_hex("EFCAFE02 010002 00 5E00")),
+        EOFValidationErrror::missing_immediate_argument);
+}
+
+// Jump* outside of code section
+// Jump* into push data
+// Jump* into jump immediate
+// Invalid rjumptable index
+// Rjumptable immediate destination
+// Rjumptable out of bounds destination
